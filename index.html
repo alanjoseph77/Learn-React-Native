@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <title>Learn React Native + Expo — Interactive Course</title>
+
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+
+  <link rel="stylesheet" href="style.css"/>
+
+  <!-- Prism: syntax highlighting for TSX/TypeScript -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"/>
+</head>
+<body>
+
+<!-- MOBILE BACKDROP -->
+<div class="backdrop hidden" id="backdrop"></div>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-left">
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+    <div class="brand">
+      <i class="fa-brands fa-react brand-icon"></i>
+      <span class="brand-name">RNLearn</span>
+    </div>
+  </div>
+
+  <div class="nav-center">
+    <div class="progress-pill">
+      <i class="fa-solid fa-trophy"></i>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progressFill"></div>
+      </div>
+      <span id="progressText">0 / 54</span>
+    </div>
+  </div>
+
+  <div class="nav-right">
+    <button class="btn-icon-nav" id="resetBtn" title="Reset progress">
+      <i class="fa-solid fa-arrow-rotate-left"></i>
+    </button>
+  </div>
+</nav>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <span class="sidebar-title">Course</span>
+      <button class="btn-icon-nav sidebar-close" id="sidebarClose">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="search-wrap">
+      <i class="fa-solid fa-magnifying-glass search-icon"></i>
+      <input type="text" id="searchBox" placeholder="Search lessons…" autocomplete="off"/>
+    </div>
+
+    <div class="sidebar-scroll">
+      <div id="lessonList"></div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="content" id="mainContent">
+
+    <!-- WELCOME SCREEN -->
+    <div id="welcomeScreen">
+      <div class="hero">
+        <div class="hero-icon-wrap">
+          <i class="fa-brands fa-react hero-react-icon"></i>
+        </div>
+        <h1 class="hero-title">Learn React Native<br/><span class="gradient-text">From Fundamentals to Production</span></h1>
+        <p class="hero-sub">54 hands-on lessons · Syntax-highlighted code · Track your progress on any device</p>
+
+        <div class="hero-stats">
+          <div class="stat-pill">
+            <i class="fa-solid fa-circle-check"></i>
+            <span id="statDone">0</span> completed
+          </div>
+          <div class="stat-pill">
+            <i class="fa-solid fa-book-open"></i>
+            54 lessons
+          </div>
+          <div class="stat-pill">
+            <i class="fa-solid fa-layer-group"></i>
+            11 sections
+          </div>
+        </div>
+
+        <button class="btn-start" id="startBtn">
+          <i class="fa-solid fa-play"></i> Start Learning
+        </button>
+      </div>
+
+      <div class="stage-cards" id="sectionCards"></div>
+    </div>
+
+    <!-- LESSON VIEW -->
+    <div class="hidden" id="lessonView">
+
+      <div class="lesson-header">
+        <div class="lesson-meta">
+          <span class="lesson-badge" id="lessonBadge"></span>
+          <span class="lesson-stage-tag" id="lessonSectionTag"></span>
+          <span class="lesson-milestone hidden" id="lessonMilestone"></span>
+        </div>
+        <h1 id="lessonTitle"></h1>
+        <p id="lessonDesc"></p>
+      </div>
+
+      <div class="goals-box hidden" id="lessonGoalsBox">
+        <h4><i class="fa-solid fa-bullseye"></i>&nbsp; Key takeaways</h4>
+        <ul id="lessonGoals"></ul>
+      </div>
+
+      <div id="lessonBody"></div>
+
+      <!-- NOTES (autosaved per lesson, per device) -->
+      <div class="notes-block">
+        <div class="notes-hdr">
+          <i class="fa-solid fa-pen-to-square"></i>
+          <span>Your Notes &amp; Answers</span>
+          <span class="notes-hint">Saved automatically on this device</span>
+        </div>
+        <textarea id="notesArea" placeholder="Write your predictions, debugged code, or answers to the practice questions here…"></textarea>
+      </div>
+
+      <!-- LESSON NAV -->
+      <div class="lesson-nav">
+        <button class="btn-nav-prev" id="prevBtn">
+          <i class="fa-solid fa-chevron-left"></i> Previous
+        </button>
+        <button class="btn-done" id="doneBtn">
+          <i class="fa-solid fa-circle-check"></i> Mark Complete
+        </button>
+        <button class="btn-nav-next" id="nextBtn">
+          Next <i class="fa-solid fa-chevron-right"></i>
+        </button>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- TOAST -->
+<div class="toast hidden" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jsx.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-tsx.min.js"></script>
+<script src="lessons-data.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
